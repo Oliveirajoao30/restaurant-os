@@ -1,0 +1,46 @@
+<div class="card card-order {{ order.status }} mb-2 shadow-sm">
+  <div class="card-body p-2">
+    <div class="d-flex justify-content-between align-items-start">
+      <strong>Pedido #{{ order.pk }}</strong>
+      {% if order.status == 'ENTREGUE' %}
+        {% if order.pago %}
+          <span class="badge bg-success"><i class="bi bi-check-circle"></i> Pago</span>
+        {% else %}
+          <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> A pagar</span>
+        {% endif %}
+      {% else %}
+        <span class="badge bg-secondary">{{ order.items.count }} item(s)</span>
+      {% endif %}
+    </div>
+    <div class="small text-muted">{{ order.criado_em|date:"d/m H:i" }}</div>
+    <div class="fw-bold {% if order.pago %}text-muted{% else %}text-success{% endif %} mt-1">
+      R$ {{ order.total }}
+    </div>
+    {% if order.observacoes %}
+      <div class="small fst-italic text-muted">{{ order.observacoes|truncatechars:40 }}</div>
+    {% endif %}
+    <div class="mt-2 d-flex gap-1 flex-wrap">
+      <a href="{% url 'pedido_detalhe' order.pk %}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-eye"></i>
+      </a>
+      {% if order.proximo_status and not order.pago %}
+        <form method="post" action="{% url 'pedido_avancar' order.pk %}" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-warning">
+            <i class="bi bi-arrow-right-circle"></i> Avançar
+          </button>
+        </form>
+      {% endif %}
+      {% if order.status == 'ENTREGUE' and not order.pago %}
+        <a href="{% url 'pedido_fechar' order.pk %}" class="btn btn-sm btn-success">
+          <i class="bi bi-cash-coin"></i> Cobrar
+        </a>
+      {% endif %}
+      {% if order.pago %}
+        <span class="small text-muted align-self-center">
+          {{ order.get_forma_pagamento_display }}
+        </span>
+      {% endif %}
+    </div>
+  </div>
+</div>

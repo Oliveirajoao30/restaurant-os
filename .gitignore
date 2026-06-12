@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Django
+db.sqlite3
+staticfiles/
+
+# Test artifacts
+.pytest_cache/
+.coverage
+
+# Env
+.env
+.venv/
+venv/
+
+# Editor
+.vscode/
+.idea/
+
+# Claude Code local settings
+.claude/

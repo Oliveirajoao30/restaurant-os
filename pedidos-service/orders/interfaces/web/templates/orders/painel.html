@@ -1,0 +1,126 @@
+{% extends "orders/base.html" %}
+{% block title %}Painel de Pedidos — RestaurantOS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2><i class="bi bi-grid-3x3-gap-fill"></i> Painel de Pedidos</h2>
+  <a href="{% url 'pedido_novo' %}" class="btn btn-success">
+    <i class="bi bi-plus-circle"></i> Novo Pedido
+  </a>
+</div>
+
+<div class="row g-2">
+
+  <!-- RECEBIDO -->
+  <div class="col">
+    <div class="card shadow-sm h-100">
+      <div class="card-header text-white status-badge-RECEBIDO d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-inbox"></i> Recebido</span>
+        <span class="badge bg-light text-dark">{{ orders_recebido|length }}</span>
+      </div>
+      <div class="card-body p-2 kanban-col">
+        {% for order in orders_recebido %}
+          {% include "orders/_order_card.html" with order=order %}
+        {% empty %}
+          <p class="text-muted text-center small mt-3">Nenhum pedido.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- EM PREPARO -->
+  <div class="col">
+    <div class="card shadow-sm h-100">
+      <div class="card-header text-white status-badge-EM_PREPARO d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-fire"></i> Em Preparo</span>
+        <span class="badge bg-light text-dark">{{ orders_em_preparo|length }}</span>
+      </div>
+      <div class="card-body p-2 kanban-col">
+        {% for order in orders_em_preparo %}
+          {% include "orders/_order_card.html" with order=order %}
+        {% empty %}
+          <p class="text-muted text-center small mt-3">Nenhum pedido.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- PRONTO -->
+  <div class="col">
+    <div class="card shadow-sm h-100">
+      <div class="card-header text-white status-badge-PRONTO d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-check-circle"></i> Pronto</span>
+        <span class="badge bg-light text-dark">{{ orders_pronto|length }}</span>
+      </div>
+      <div class="card-body p-2 kanban-col">
+        {% for order in orders_pronto %}
+          {% include "orders/_order_card.html" with order=order %}
+        {% empty %}
+          <p class="text-muted text-center small mt-3">Nenhum pedido.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ENTREGUE — pagos e não pagos na mesma coluna, filtro dinâmico -->
+  <div class="col">
+    <div class="card shadow-sm h-100 {% if n_aguardando %}border-warning{% endif %}">
+      <div class="card-header text-white status-badge-ENTREGUE">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <span>
+            <i class="bi bi-bag-check"></i> Entregue
+            {% if n_aguardando %}
+              <span class="badge bg-warning text-dark ms-1" title="Aguardando pagamento">
+                {{ n_aguardando }} <i class="bi bi-cash-coin"></i>
+              </span>
+            {% endif %}
+          </span>
+          <span class="badge bg-light text-dark">{{ orders_entregue|length }}</span>
+        </div>
+        <!-- Filtro dinâmico -->
+        <div class="btn-group btn-group-sm w-100" role="group" id="filtro-entregue">
+          <button type="button" class="btn btn-light active" data-filtro="todos">Todos</button>
+          <button type="button" class="btn btn-light" data-filtro="aguardando">
+            <i class="bi bi-hourglass-split"></i> A pagar
+          </button>
+          <button type="button" class="btn btn-light" data-filtro="pago">
+            <i class="bi bi-check-circle"></i> Pagos
+          </button>
+        </div>
+      </div>
+      <div class="card-body p-2 kanban-col">
+        {% for order in orders_entregue %}
+          <div class="card-entregue {% if order.pago %}status-pago{% else %}status-aguardando{% endif %}">
+            {% include "orders/_order_card.html" with order=order %}
+          </div>
+        {% empty %}
+          <p class="text-muted text-center small mt-3">Nenhum pedido entregue.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Filtro dinâmico da coluna Entregue
+  document.querySelectorAll('#filtro-entregue button').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('#filtro-entregue button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filtro = btn.dataset.filtro;
+      document.querySelectorAll('.card-entregue').forEach(function(el) {
+        if (filtro === 'todos') {
+          el.style.display = '';
+        } else if (filtro === 'aguardando') {
+          el.style.display = el.classList.contains('status-aguardando') ? '' : 'none';
+        } else {
+          el.style.display = el.classList.contains('status-pago') ? '' : 'none';
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "catalog/base.html" %}
+{% block title %}Cardápio — RestaurantOS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2><i class="bi bi-menu-button-wide-fill"></i> Cardápio</h2>
+  <a href="{% url 'cardapio_create' %}" class="btn btn-success">
+    <i class="bi bi-plus-circle"></i> Novo Item
+  </a>
+</div>
+
+<!-- Filtro por categoria -->
+<ul class="nav nav-tabs mb-3">
+  <li class="nav-item">
+    <a class="nav-link {% if not categoria_ativa %}active{% endif %}" href="{% url 'cardapio_list' %}">
+      Todos
+    </a>
+  </li>
+  {% for cod, nome in categorias %}
+    <li class="nav-item">
+      <a class="nav-link {% if categoria_ativa == cod %}active{% endif %}"
+         href="?categoria={{ cod }}">{{ nome }}</a>
+    </li>
+  {% endfor %}
+</ul>
+
+{% if itens %}
+  <div class="table-responsive">
+    <table class="table table-hover align-middle bg-white shadow-sm rounded">
+      <thead class="table-dark">
+        <tr>
+          <th>Nome</th>
+          <th>Categoria</th>
+          <th>Preço</th>
+          <th>Disponível</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in itens %}
+          <tr>
+            <td>{{ item.nome }}</td>
+            <td>
+              {% if item.categoria == 'ENTRADA' %}<span class="badge bg-info text-dark">
+              {% elif item.categoria == 'PRATO_PRINCIPAL' %}<span class="badge bg-warning text-dark">
+              {% elif item.categoria == 'SOBREMESA' %}<span class="badge bg-danger">
+              {% else %}<span class="badge bg-primary">{% endif %}
+                {{ item.get_categoria_display }}
+              </span>
+            </td>
+            <td>R$ {{ item.preco }}</td>
+            <td>
+              {% if item.disponivel %}
+                <span class="badge bg-success">Disponível</span>
+              {% else %}
+                <span class="badge bg-secondary">Indisponível</span>
+              {% endif %}
+            </td>
+            <td>
+              <form method="post" action="{% url 'cardapio_toggle' item.id %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm {% if item.disponivel %}btn-outline-secondary{% else %}btn-outline-success{% endif %}">
+                  {% if item.disponivel %}
+                    <i class="bi bi-toggle-on"></i> Desativar
+                  {% else %}
+                    <i class="bi bi-toggle-off"></i> Ativar
+                  {% endif %}
+                </button>
+              </form>
+              <a href="{% url 'cardapio_edit' item.id %}" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-pencil"></i> Editar
+              </a>
+              <a href="{% url 'cardapio_delete' item.id %}" class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-trash"></i> Excluir
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="alert alert-info">Nenhum item cadastrado nesta categoria.</div>
+{% endif %}
+{% endblock %}

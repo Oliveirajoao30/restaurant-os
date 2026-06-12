@@ -1,0 +1,202 @@
+{% extends "orders/base.html" %}
+{% block title %}Fechar Pedido #{{ order.pk }} — RestaurantOS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+
+    {% if receipt and receipt.status == 'aprovado' %}
+      <!-- Recibo de pagamento aprovado -->
+      <div class="card border-success shadow">
+        <div class="card-header bg-success text-white">
+          <i class="bi bi-check-circle-fill"></i> <strong>Pagamento Confirmado!</strong>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Pedido #{{ order.pk }}</h5>
+          <p><strong>Forma:</strong> {{ receipt.metodo }}</p>
+
+          <!-- Breakdown subtotal + gorjeta -->
+          <table class="table table-sm mb-2">
+            <tr>
+              <td>Subtotal dos itens:</td>
+              <td class="text-end">R$ {{ receipt.subtotal }}</td>
+            </tr>
+            {% if receipt.incluiu_gorjeta %}
+              <tr class="text-muted">
+                <td>Serviço (10% garçom):</td>
+                <td class="text-end">R$ {{ receipt.gorjeta }}</td>
+              </tr>
+            {% else %}
+              <tr class="text-muted fst-italic">
+                <td colspan="2">Serviço de 10% não incluído (direito do cliente).</td>
+              </tr>
+            {% endif %}
+            <tr class="fw-bold table-light">
+              <td>Total cobrado:</td>
+              <td class="text-end text-success">R$ {{ receipt.valor }}</td>
+            </tr>
+          </table>
+
+          {% if receipt.troco is not None %}
+            <p><strong>Valor Recebido:</strong> R$ {{ receipt.valor_recebido }}</p>
+            <p class="text-success fw-bold"><strong>Troco:</strong> R$ {{ receipt.troco }}</p>
+          {% endif %}
+
+          {% if receipt.parcelas %}
+            <p><strong>Parcelas:</strong> {{ receipt.parcelas }}x de R$ {{ receipt.valor_por_parcela }}</p>
+          {% endif %}
+
+          {% if receipt.chave_pix %}
+            <div class="alert alert-info py-2">
+              <i class="bi bi-qr-code"></i> <strong>Chave PIX:</strong>
+              <code>{{ receipt.chave_pix }}</code>
+            </div>
+          {% endif %}
+
+          <div class="alert alert-success mt-2 py-2">{{ receipt.mensagem }}</div>
+
+          <a href="{% url 'painel' %}" class="btn btn-success">
+            <i class="bi bi-arrow-left"></i> Voltar ao Painel
+          </a>
+        </div>
+      </div>
+
+    {% elif receipt and receipt.status == 'recusado' %}
+      <div class="alert alert-danger">
+        <i class="bi bi-x-circle"></i> {{ receipt.mensagem }}
+      </div>
+    {% endif %}
+
+    {% if not receipt or receipt.status == 'recusado' %}
+      <!-- Formulário de pagamento -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <i class="bi bi-cash-coin"></i> <strong>Fechar Pedido #{{ order.pk }}</strong>
+          <small class="d-block text-white-50">Padrão: Strategy — PaymentContext</small>
+        </div>
+        <div class="card-body">
+
+          <!-- Subtotal + gorjeta estimada (pré-seleção) -->
+          <div class="card bg-light border mb-3">
+            <div class="card-body py-2">
+              <div class="d-flex justify-content-between">
+                <span>Subtotal dos itens:</span>
+                <strong>R$ {{ order.total }}</strong>
+              </div>
+              <div class="d-flex justify-content-between text-muted small" id="linha-gorjeta">
+                <span>Serviço (10% garçom):</span>
+                <span id="valor-gorjeta"></span>
+              </div>
+              <hr class="my-1">
+              <div class="d-flex justify-content-between fw-bold text-success fs-5">
+                <span>Total a cobrar:</span>
+                <span id="total-exibido">R$ {{ order.total }}</span>
+              </div>
+            </div>
+          </div>
+
+          <form method="post">
+            {% csrf_token %}
+
+            <!-- Gorjeta -->
+            <div class="mb-3 p-3 border rounded bg-warning bg-opacity-10">
+              <div class="form-check">
+                {{ form.incluir_gorjeta }}
+                <label class="form-check-label fw-bold" for="{{ form.incluir_gorjeta.id_for_label }}">
+                  {{ form.incluir_gorjeta.label }}
+                </label>
+              </div>
+              <small class="text-muted d-block mt-1">
+                <i class="bi bi-info-circle"></i>
+                O cliente tem o direito de recusar o serviço de 10%.
+              </small>
+            </div>
+
+            <!-- Forma de pagamento -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Forma de Pagamento:</label>
+              {% for radio in form.forma %}
+                <div class="form-check">
+                  {{ radio.tag }}
+                  <label class="form-check-label" for="{{ radio.id_for_label }}">
+                    {{ radio.choice_label }}
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+
+            <!-- Campo dinheiro -->
+            <div id="campo-dinheiro" class="mb-3 d-none">
+              <label class="form-label">{{ form.valor_recebido.label }}</label>
+              {{ form.valor_recebido }}
+              {% if form.valor_recebido.errors %}
+                <div class="text-danger small">{{ form.valor_recebido.errors }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Campo cartão -->
+            <div id="campo-cartao" class="mb-3 d-none">
+              <label class="form-label">{{ form.parcelas.label }}</label>
+              {{ form.parcelas }}
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle"></i> Confirmar Pagamento
+              </button>
+              <a href="{% url 'pedido_detalhe' order.pk %}" class="btn btn-outline-secondary">
+                Cancelar
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const totalBase = {{ order.total }};
+  const gorjetaValor = Math.round(totalBase * 0.10 * 100) / 100;
+
+  function fmt(v) {
+    return 'R$ ' + v.toFixed(2).replace('.', ',');
+  }
+
+  function atualizar() {
+    const incluir = document.getElementById('{{ form.incluir_gorjeta.id_for_label }}').checked;
+    const linhaGorjeta = document.getElementById('linha-gorjeta');
+    const totalExibido = document.getElementById('total-exibido');
+    const valorGorjeta = document.getElementById('valor-gorjeta');
+
+    if (incluir) {
+      const total = totalBase + gorjetaValor;
+      valorGorjeta.textContent = fmt(gorjetaValor);
+      totalExibido.textContent = fmt(total);
+      linhaGorjeta.classList.remove('text-decoration-line-through', 'opacity-50');
+    } else {
+      valorGorjeta.textContent = fmt(gorjetaValor);
+      totalExibido.textContent = fmt(totalBase);
+      linhaGorjeta.classList.add('text-decoration-line-through', 'opacity-50');
+    }
+  }
+
+  function toggleCampos() {
+    const forma = document.querySelector('input[name="forma"]:checked');
+    document.getElementById('campo-dinheiro').classList.add('d-none');
+    document.getElementById('campo-cartao').classList.add('d-none');
+    if (!forma) return;
+    if (forma.value === 'DINHEIRO') document.getElementById('campo-dinheiro').classList.remove('d-none');
+    if (forma.value === 'CARTAO')   document.getElementById('campo-cartao').classList.remove('d-none');
+  }
+
+  document.getElementById('{{ form.incluir_gorjeta.id_for_label }}').addEventListener('change', atualizar);
+  document.querySelectorAll('input[name="forma"]').forEach(r => r.addEventListener('change', toggleCampos));
+
+  atualizar();
+  toggleCampos();
+</script>
+{% endblock %}

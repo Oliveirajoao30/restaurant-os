@@ -1,0 +1,1170 @@
+1
+                          UNIVERSIDADE DE VASSOURAS
+                          Curso de Graduação em Engenharia de Software
+
+                                        Prof. Márcio Garrido
+                          Mestre em Engenharia Elétrica e Telecomunicações
+                              Especialista em Segurança da Informação
+                          Especialista em Engenharia Elétrica e Automação
+                                Engenheiro de Segurança do Trabalho
+                                Bacharel em Engenharia de Software
+                          Bacharel em Sistema da Informação e Analista de
+                                              Sistemas
+
+
+                                         E-mail:
+                           marcio.garrido@univassouras.edu.br
+
+
+
+
+Disciplina: Arquitetura e projeto de software
+Engenharia de Software
+
+
+Tópicos                                         Arquitetura e Projeto de Software
+
+  • Estrutura de um Processo de Desenvolvimento de
+    Software
+
+ •Processo de Desenvolvimento de Software
+
+    ❑ Conjunto de atividades e tarefas organizadas para criar software.
+
+    ❑ Em organizações nas quais a diversidade de processos de software é
+      reduzida, os processos de software podem ser melhorados pela
+      padronização.
+
+    ❑ Isso possibilita uma melhor comunicação, além de redução no período
+      de treinamento, e torna mais econômico o apoio ao processo
+      automatizado.
+
+                                                                              3
+Engenharia de Software
+
+
+Tópicos                                      Arquitetura e Projeto de Software
+
+  • Ciclos de Vida
+
+
+ •Ciclo de Vida de Software
+
+    ❑ O ciclo de vida de um software é uma estrutura que indica processos e
+      atividades envolvidas:
+       ❑ No desenvolvimento;
+       ❑ Na operação e ;
+       ❑ Na manutenção de um software .
+
+    ❑ Abrange toda a vida do Software.
+
+
+
+
+                                                                           4
+Engenharia de Software
+
+
+Tópicos                                      Arquitetura e Projeto de Software
+
+  • Arquitetura de Software
+
+
+ •Projeto de Arquitetura
+
+    ❑ Arquitetura de Software refere-se à estrutura fundamental e
+      organização de um sistema de software, incluindo componentes,
+      interações e decisões de design de alto nível.
+    ❑ Ela define como os diferentes componentes do sistema se comunicam,
+      interagem e cooperam para alcançar os objetivos do software.
+    ❑ Uma boa arquitetura pode melhorar a manutenibilidade, escalabilidade
+      e extensibilidade do sistema.
+
+
+
+
+                                                                           5
+Engenharia de Software
+
+
+Tópicos                                      Arquitetura e Projeto de Software
+
+  • Arquitetura de Software
+
+
+ •Projeto de Arquitetura
+
+    ❑ O projeto de arquitetura está preocupado com a compreensão de como
+      um sistema deve ser organizado e com a estrutura geral desse sistema.
+    ❑ Identifica os principais componentes estruturais de alto nível de um
+      sistema e os relacionamentos entre eles.
+    ❑ Em processos ágeis, geralmente se aceita que um estágio inicial do
+      processo de desenvolvimento se preocupe com o estabelecimento de
+      uma arquitetura global do sistema.
+    ❑ O desenvolvimento incremental de arquiteturas geralmente não é bem-
+      sucedido.
+    ❑ A refatoração de componentes em resposta às mudanças é fácil, a
+      refatoração de uma arquitetura é geralmente cara.                  6
+Engenharia de Software
+
+
+Tópicos                       Arquitetura e Projeto de Software
+
+  • Arquitetura de Software
+
+
+
+
+                                                            7
+Engenharia de Software
+
+
+Tópicos                                      Arquitetura e Projeto de Software
+
+  • Arquitetura de Software
+
+
+ •Projeto de Arquitetura
+
+    ❑ arquitetura de software é importante, pois afeta o desempenho e a
+      robustez, bem como a capacidade de distribuição e de manutenibilidade
+      de um sistema.
+    ❑ Os requisitos não funcionais dependem da arquitetura do sistema — a
+      forma como esses componentes estão organizados e se comunicam.
+    ❑ Vantagens:
+       ❑ Comunicação de stakeholders;
+       ❑ Análise de sistema;
+       ❑ Reúso em larga escala;
+
+                                                                           8
+Engenharia de Software
+
+
+Tópicos                                      Arquitetura e Projeto de Software
+
+  • Arquitetura de Software
+
+
+ •Projeto de Arquitetura
+
+    ❑ Sistemas no mesmo domínio de aplicação frequentemente têm
+      arquiteturas similares.
+    ❑ A arquitetura de um sistema de software pode se basear em um
+      determinado padrão ou estilo de arquitetura.
+    ❑ Um padrão de arquitetura é uma descrição de uma organização do
+      sistema.
+    ❑ Os padrões de arquitetura capturam a essência de uma arquitetura que
+      tem sido usada em diferentes sistemas de software.
+
+
+                                                                           9
+Engenharia de Software
+
+
+Tópicos                                        Arquitetura e Projeto de Software
+
+  • Arquitetura de Software
+
+
+ •Projeto de Arquitetura
+
+
+    ❑ Ao tomar decisões sobre a arquitetura de um sistema, você deve
+      conhecer os padrões comuns, bem como saber onde eles podem ser
+      usados e quais são seus pontos fortes e fracos.
+    ❑ Avaliar um projeto de arquitetura é difícil, pois o verdadeiro teste de
+      uma arquitetura é quão bem o sistema satisfaz aos requisitos funcionais
+      e não funcionais quando em uso.
+
+
+
+
+                                                                            10
+Engenharia de Software
+
+
+Tópicos                                     Arquitetura e Projeto de Software
+
+  • Arquitetura de Software
+
+
+ •Documentação
+
+
+    ❑ Os usuários de métodos ágeis alegam que, na maior parte do tempo, a
+      documentação detalhada de projeto não é usada. E, portanto,
+      desenvolvê-la seria um desperdício de tempo e dinheiro.
+    ❑ Você deve desenvolver visões úteis para a comunicação, e não se
+      preocupar se sua documentação de arquitetura está completa ou não.
+
+
+
+
+                                                                         11
+Engenharia de Software
+
+
+Tópicos                                      Arquitetura e Projeto de Software
+
+  • Arquitetura de Software
+
+
+ •Documentação
+
+
+    ❑ Você pode pensar em um padrão de arquitetura como uma descrição
+      abstrata, estilizada, de boas práticas experimentadas e testadas em
+      diferentes sistemas e ambientes. Assim, um padrão de arquitetura deve
+      descrever uma organização de sistema bem-sucedida em sistemas
+      anteriores. Deve incluir informações de quando o uso desse padrão é
+      adequado, e seus pontos fortes e fracos.
+
+
+
+
+                                                                          12
+Engenharia de Software
+
+
+Tópicos                           Arquitetura e Projeto de Software
+
+  • Arquitetura de Software MVC
+
+
+
+
+                                                               13
+Engenharia de Software
+
+
+Tópicos                           Arquitetura e Projeto de Software
+
+  • Arquitetura de Software MVC
+
+
+
+
+                                                               14
+Engenharia de Software
+
+
+Tópicos                           Arquitetura e Projeto de Software
+
+  • Arquitetura de Software MVC
+
+
+
+
+                                                               15
+Engenharia de Software
+
+
+Tópicos                          Arquitetura e Projeto de Software
+
+  • Arquitetura de Software em Camadas
+
+
+
+
+                                                              16
+Engenharia de Software
+
+
+Tópicos                          Arquitetura e Projeto de Software
+
+  • Arquitetura de Software em Camadas
+
+
+
+
+                                                              17
+Engenharia de Software
+
+
+Tópicos                          Arquitetura e Projeto de Software
+
+  • Arquitetura de Software em Camadas
+
+
+
+
+                                                              18
+Engenharia de Software
+
+
+Tópicos                             Arquitetura e Projeto de Software
+
+  • Arquitetura de Software Repositório
+
+
+
+
+                                                                 19
+Engenharia de Software
+
+
+Tópicos                             Arquitetura e Projeto de Software
+
+  • Arquitetura de Software Repositório
+
+
+
+
+                                                                 20
+Engenharia de Software
+
+
+Tópicos                             Arquitetura e Projeto de Software
+
+  • Arquitetura de Software Ciente-Servidor
+
+
+
+
+                                                                 21
+Engenharia de Software
+
+
+Tópicos                             Arquitetura e Projeto de Software
+
+  • Arquitetura de Software Ciente-Servidor
+
+
+
+
+                                                                 22
+Engenharia de Software
+
+
+Tópicos                               Arquitetura e Projeto de Software
+
+  • Arquitetura de Software Duto e Filtro (Pipeline and Filter)
+
+
+
+
+                                                                   23
+Engenharia de Software
+
+
+Tópicos                       Arquitetura e Projeto de Software
+
+  • Arquitetura de Software
+
+
+
+
+                                                           24
+Engenharia de Software
+
+
+Tópicos                                         Arquitetura e Projeto de Software
+
+  • Arquitetura de Software
+
+
+
+
+credits: https://www3.ntu.edu.sg/home/ehchua/programming/opengl/CG_BasicsTheory.htm
+
+                                                                             25
+Engenharia de Software
+
+
+Tópicos                       Arquitetura e Projeto de Software
+
+  • Arquitetura de Software
+
+
+
+
+                                                           26
+Engenharia de Software
+
+
+Tópicos                       Arquitetura e Projeto de Software
+
+  • Arquitetura de Software
+
+
+
+
+                                                           27
+Engenharia de Software
+
+
+Tópicos                                       Arquitetura e Projeto de Software
+
+  • Padrões de Projeto
+ •Definições
+   ❑ Os padrões de projetos tornam mais fácil reutilizar projetos e
+     arquiteturas bem-sucedidas.
+
+   ❑ “Cada padrão descreve um problema no nosso ambiente e o cerne da
+     sua solução, de tal forma que você possa usar essa solução mais de um
+     milhão de vezes, sem nunca fazê-lo da mesma maneira” – Christopher
+     Alexander
+
+   ❑ Um padrão de projeto nomeia, abstrai e identifica os aspectos-chave de
+     uma estrutura de projeto comum para torna-la útil para a criação de um
+     projeto orientado a objetos reutilizável.
+
+                                                                           28
+Engenharia de Software
+
+
+Tópicos                                         Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+
+ Elementos
+
+    ❑ Elementos Essenciais:
+       ❑ Nome
+       ❑ Problema
+       ❑ Solução
+       ❑ Consequências
+
+    ❑ O padrão de projeto identifica as classes e instâncias participantes, seus
+      papéis, colaborações e a distribuição de responsabilidades.
+
+
+                                                                             29
+Engenharia de Software
+
+
+Tópicos                   Arquitetura e Projeto de Software
+
+
+     Padrões de Projeto
+
+
+
+
+                                                       30
+Engenharia de Software
+
+
+Tópicos                  Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+
+
+
+                                                      31
+Engenharia de Software
+
+
+Tópicos                                       Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+
+ Criação, Estruturais e Comportamentais
+
+          ❑ Os padrões de criação se preocupam com o processo de criação de
+            objetos.
+          ❑ Os padrões estruturais lidam com a composição de classes ou
+            objetos.
+          ❑ Os padrões comportamentais caracterizam as maneiras pelas quais
+            classes ou objetos interagem e distribuem responsabilidades.
+
+
+
+
+                                                                           32
+Engenharia de Software
+
+
+Tópicos                      Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+
+ Principais
+
+    ❑     Abstract Factory
+    ❑     Adapter
+    ❑     Composite
+    ❑     Decorator
+    ❑     Factory Method
+    ❑     Observer
+    ❑     Strategy
+
+
+
+
+                                                          33
+Engenharia de Software
+
+
+Tópicos                  Arquitetura e Projeto de Software
+
+  Padrões de Projeto
+
+
+
+
+                                                      34
+Engenharia de Software
+
+
+Tópicos                                             Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+  1. Factory Method
+  Exemplo: Sistema de transporte
+  Você tem uma classe base Transporte e subclasses Carro, Bicicleta, Caminhao.
+  •Em vez de usar new Carro(), você chama um método fábrica:
+
+
+
+
+                                                                                 35
+Engenharia de Software
+
+
+Tópicos                                             Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+  2. Abstract Factory
+  Exemplo: Interface gráfica (UI) multiplataforma
+   Você quer criar botões e janelas para Windows ou Mac.
+  • FabricaWindows cria BotaoWindows e JanelaWindows
+  • FabricaMac cria BotaoMac e JanelaMac
+
+
+
+
+    Garante que os componentes combinem entre si.
+                                                                                 36
+Engenharia de Software
+
+
+Tópicos                                         Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+  3. Builder
+  Exemplo: Montagem de um sanduíche
+  Você constrói passo a passo:
+          Montagem de um Computador (Builder)
+          •CPU
+          •RAM
+          •Armazenamento
+          •Placa de vídeo (opcional)
+          •Sistema operacional
+          Sem Builder, ficaria algo confuso:
+
+
+
+
+                                                                             37
+Engenharia de Software
+
+
+Tópicos                  Arquitetura e Projeto de Software
+
+
+
+
+                                                      38
+Engenharia de Software
+
+
+Tópicos                  Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+  3. Builder
+
+
+
+
+                                                      39
+Engenharia de Software
+
+
+Tópicos                                           Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+  4. Prototype
+  Exemplo: Clonar objetos
+  Você tem um objeto complexo (ex: personagem de jogo) e quer copiar:
+
+
+
+
+                                                                               40
+Engenharia de Software
+
+
+Tópicos                                           Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+  4. Prototype
+  Exemplo: Clonar objetos
+  Você tem um objeto complexo (ex: personagem de jogo) e quer copiar:
+
+
+
+
+                                                                               41
+Engenharia de Software
+
+
+Tópicos                                 Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+  5. Singleton
+  Exemplo: Conexão com banco de dados
+  Só pode existir uma instância:
+
+
+
+
+    db1 e db2 são o mesmo objeto.
+
+                                                                     42
+Engenharia de Software
+
+
+Tópicos                  Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+
+
+
+                                                      43
+Engenharia de Software
+
+
+Tópicos                                             Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+      6. Adapter (classe/objeto)
+      Exemplo: Tomada e plug
+      Você tem um plug americano, mas a tomada é europeia.
+      •O Adapter é o “adaptador de tomada”.
+
+
+
+
+      “Faz duas coisas incompatíveis funcionarem juntas.”
+
+                                                                                 44
+Engenharia de Software
+
+
+Tópicos                                            Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+      7. Bridge
+      Exemplo: Controle remoto e dispositivos
+      Você separa:
+      • Controle remoto (abstração)
+      • TV / Rádio (implementação).
+
+
+
+
+      “Separa o controle do que está sendo controlado.”
+
+                                                                                45
+Engenharia de Software
+
+
+Tópicos                                          Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+      8. Composite – Exemplo: Sistema de Funcionários (Folha de Pagamento)
+      Imagine uma empresa onde você tem:
+      • Funcionários individuais
+      • Departamentos (que contêm funcionários ou outros departamentos)
+          E você quer calcular o salário total, sem se preocupar se é um
+      funcionário ou um grupo (departamento).
+
+
+
+
+                                                                              46
+Engenharia de Software
+
+
+Tópicos                  Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+
+
+
+                                                      47
+Engenharia de Software
+
+
+Tópicos                  Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+
+
+
+                                                      48
+Engenharia de Software
+
+
+Tópicos                                           Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+
+
+
+   “No Composite, você trata um grupo de objetos da mesma forma que trata um
+   objeto único. Aqui, tanto um funcionário quanto um departamento respondem a
+   calcularSalario().”
+                                                                               49
+Engenharia de Software
+
+
+Tópicos                                           Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+          9. Decorator
+          Exemplo: Café com adicionais
+          Você começa com um café simples e vai adicionando:
+
+
+
+
+          Por que usar?
+          • Evita criar várias classes tipo:
+          • CafeComLeite
+          • CafeComChocolate
+          • CafeComLeiteEChocolate
+          •Permite combinar comportamentos livremente
+                                                                               50
+Engenharia de Software
+
+
+Tópicos                                          Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+          10. Facade – Exemplo: Fazer uma compra online
+          Para finalizar uma compra, o sistema precisa:
+          • validar pagamento
+          • verificar estoque
+          • calcular frete
+          • gerar pedido
+          • enviar confirmação
+          Sem Facade, ficaria algo assim:
+
+
+
+
+                                                                              51
+Engenharia de Software
+
+
+Tópicos                                               Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+
+
+
+          “Facade cria uma porta de entrada simples para várias coisas complicadas.”
+                                                                                   52
+Engenharia de Software
+
+
+Tópicos                  Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+
+
+
+                                                      53
+Engenharia de Software
+
+
+Tópicos                                             Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+       11. Flyweight – Exemplo: Sistema de alunos
+           Problema
+       Uma universidade tem 100.000 alunos.
+
+       Cada aluno tem:
+       •nome
+       •matrícula
+       •curso
+       •cidade
+       •estado
+
+       Mas milhares de alunos são da mesma cidade/estado.
+
+
+
+
+                                                                                 54
+Engenharia de Software
+
+
+Tópicos                                            Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+          Sem Flyweight (ineficiente)
+       Cada aluno guarda tudo:
+
+
+
+
+          Resultado:
+       Você repete "São Paulo", "SP" milhares de vezes na memória.
+
+                                                                                55
+Engenharia de Software
+
+
+Tópicos                            Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+          Com Flyweight
+          O que é compartilhado:
+       • cidade + estado
+          O que é único:
+       • nome, matrícula
+
+
+
+
+                                                                56
+Engenharia de Software
+
+
+Tópicos                              Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+       Fábrica (reutiliza objetos)
+
+
+
+
+                                                                  57
+Engenharia de Software
+
+
+Tópicos                  Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+       Classe Aluno
+
+
+
+
+                                                      58
+Engenharia de Software
+
+
+Tópicos                                              Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+       Uso de fato
+
+
+
+
+    “Se muitos objetos têm partes iguais, guarde essa parte uma vez só e compartilhe.”
+
+
+
+
+                                                                                  59
+Engenharia de Software
+
+
+Tópicos                                             Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+     12. Proxy (Ana Clara)
+     Exemplo: Controle de acesso a um sistema
+     Antes de acessar o objeto real, passa por um intermediário:
+
+                  Sem Proxy
+               Qualquer código acessa direto:
+
+
+
+
+                   Com Proxy
+
+
+
+
+                                                                                 60
+Engenharia de Software
+
+
+Tópicos                                            Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+
+
+
+     “Você não fala direto com o sistema — fala com quem autoriza.”
+                                                                                61
+Engenharia de Software
+
+
+Tópicos                                         Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+                 Resumo rápido
+
+                 •Adapter → adapta interfaces
+                 •Bridge → separa abstração da implementação
+                 •Composite → trata grupo como um só
+                 •Decorator → adiciona comportamento
+                 •Facade → simplifica sistema complexo
+                 •Flyweight → economiza memória
+                 •Proxy → controla acesso
+
+
+
+
+                                                                             62
+Engenharia de Software
+
+
+Tópicos                  Arquitetura e Projeto de Software
+
+
+    Padrões de Projeto
+
+
+
+
+                                                      63
+Engenharia de Software
+
+
+Tópicos                  Arquitetura e Projeto de Software
+
+  Padrões de Projeto
+
+
+
+
+                                                      64
+Engenharia de Software
+
+
+Tópicos                  Arquitetura e Projeto de Software
+
+  Padrões de Projeto
+
+
+
+
+                                                      65
+Engenharia de Software
+
+
+Tópicos                                        Arquitetura e Projeto de Software
+
+  Abstract Factory
+
+
+ Intenção
+
+    ❑ Fornecer uma interface para criação de famílias de objetos relacionados
+      ou dependentes sem especificar suas classes concretas.
+
+
+
+
+                                                                            66
+Engenharia de Software
+
+
+Tópicos                                     Arquitetura e Projeto de Software
+
+
+    Abstract Factory
+
+
+ Aplicabilidade
+
+    ❑ Use este padrão quando:
+       ❑ Um sistema deve ser independente de como seus produtos são
+         criados, compostos ou representados;
+       ❑ Um sistema deve ser configurado como um produto de uma família
+         de múltiplos produtos;
+       ❑ Uma família de objetos-produto for projetada para ser usada em
+         conjunto, e você necessita garantir esta restrição;
+       ❑ Você quer fornecer uma biblioteca de classes de produtos e quer
+         revelar somente suas interfaces, não suas implementações.
+
+                                                                         67
+Engenharia de Software
+
+
+Tópicos                  Arquitetura e Projeto de Software
+
+  Abstract Factory
+
+
+
+
+                                                      68
+Engenharia de Software
+
+
+Tópicos                                         Arquitetura e Projeto de Software
+
+  Abstract Factory
+
+
+ Consequências
+
+    ❑ Isola as lasses concretas. O padrão Abstract Factory ajuda a controlar as
+      classes de objetos criadas por uma aplicação. Uma vez que a fábrica
+      encapsula a responsabilidade e o processo de criar objetos-produto,
+      isola os clientes das classes de implementação. Os clientes manipulam
+      as instâncias através das suas interfaces abstratas. Nomes de classes-
+      produto ficam isolados na implementação da fábrica concreta; eles não
+      aparecem no código do cliente.
+
+
+
+
+                                                                             69
+Engenharia de Software
+
+
+Tópicos                                        Arquitetura e Projeto de Software
+
+  Abstract Factory
+
+
+ Consequências
+
+    ❑ Torna fácil a troca de famílias de produtos. A classe de uma fábrica
+      concreta aparece apenas uma vez numa aplicação- isto é, quando é
+      instanciada. Isso torna fácil mudar a fábrica concreta que uma aplicação
+      usa. Ela pode usar diferentes configurações de produtos simplesmente
+      trocando a fábrica concreta. Uma vez que a fábrica abstrata cria uma
+      família completa de produtos, toda família de produtos muda de uma só
+      vez.
+
+
+
+
+                                                                            70
+Engenharia de Software
+
+
+Tópicos                                      Arquitetura e Projeto de Software
+
+  Abstract Factory
+
+
+ Consequências
+
+    ❑ Promove a harmonia entre produtos. Qunado objetos-produto numa
+      família são projetados para trabalharem juntos, é importante que uma
+      aplicação use objetos de somente uma família de cada vez. Abstract
+      Factory torna fácil assegurar isso.
+
+
+
+
+                                                                          71
+Engenharia de Software
+
+
+Tópicos                                        Arquitetura e Projeto de Software
+
+  Abstract Factory
+
+
+ Consequências
+
+    ❑ É difícil suportar novos tipos de produtos. Estender fábricas abstratas
+      para produzir novos tipos de produtos não é fácil. Isso se deve ao fato
+      de que a interface da AbstractFactory fixa o conjunto de produtos que
+      podem ser criados. Suportar novos tipos de produto exige estender a
+      interface da fábrica, o que envolve mudar a classe AbstractFactory e
+      todas as suas subclasses.
+
+
+
+
+                                                                            72
+Engenharia de Software
+
+
+Atividade                                       Infraestrutura de TI
+
+
+      Atividades
+
+               Ler o capítulo 1 da bibliografia a seguir:
+
+   • GAMMA, ERICH, HELM, Richard, JOHSON, Ralph, VILSSIDES,
+     John. Padrões de Projetos: Soluções Reutilizáveis de Software
+     Orinetado a Objetos. [Minha Biblioteca]. Retirado de
+     https://integrada.minhabiblioteca.com.br/#/books/9788577800469
+     /
+
+
+
+
+                                                                       73
+

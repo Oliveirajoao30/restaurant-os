@@ -1,0 +1,66 @@
+# Blueprint para deploy no Render (https://render.com/docs/blueprint-spec).
+#
+# Antes de usar:
+# 1. Substitua `repo:` pela URL do repositório Git (GitHub) dos dois serviços.
+# 2. Após o primeiro deploy do `cardapio-service`, confirme a URL pública gerada pelo
+#    Render (normalmente `https://cardapio-service.onrender.com`, mas pode receber um
+#    sufixo se o nome já estiver em uso) e ajuste `CARDAPIO_SERVICE_URL` abaixo se
+#    necessário.
+
+databases:
+  - name: cardapio-db
+    plan: free
+    databaseName: cardapio
+    user: cardapio
+
+  - name: pedidos-db
+    plan: free
+    databaseName: pedidos
+    user: pedidos
+
+services:
+  - type: web
+    name: cardapio-service
+    runtime: docker
+    plan: free
+    repo: https://github.com/USERNAME/REPO
+    rootDir: cardapio-service
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/v1/menu-items/
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://*.onrender.com"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cardapio-db
+          property: connectionString
+
+  - type: web
+    name: pedidos-service
+    runtime: docker
+    plan: free
+    repo: https://github.com/USERNAME/REPO
+    rootDir: pedidos-service
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://*.onrender.com"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pedidos-db
+          property: connectionString
+      - key: CARDAPIO_SERVICE_URL
+        value: "https://cardapio-service.onrender.com"

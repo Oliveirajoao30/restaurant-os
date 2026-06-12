@@ -1,0 +1,106 @@
+{% extends "orders/base.html" %}
+{% block title %}Novo Pedido — RestaurantOS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <i class="bi bi-cart-plus"></i> <strong>Montar Pedido</strong>
+        <small class="d-block text-white-50">Padrão: Builder — PedidoBuilder</small>
+      </div>
+      <div class="card-body">
+        <form method="post" id="pedido-form">
+          {% csrf_token %}
+
+          {% if not itens_disponiveis %}
+            <div class="alert alert-warning">
+              Nenhum item disponível no cardápio.
+              <a href="{{ CARDAPIO_SERVICE_URL }}" target="_blank">Gerenciar cardápio</a>
+            </div>
+          {% else %}
+
+            <p class="text-muted small mb-3">
+              Informe a quantidade desejada de cada item (0 = não incluir).
+            </p>
+
+            <div class="table-responsive mb-3">
+              <table class="table table-sm align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Item</th>
+                    <th>Categoria</th>
+                    <th class="text-end">Preço</th>
+                    <th style="width: 110px;">Quantidade</th>
+                    <th class="text-end">Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody id="itens-tbody">
+                  {% for item in itens_disponiveis %}
+                    <tr data-preco="{{ item.preco }}">
+                      <td>{{ item.nome }}</td>
+                      <td><span class="badge bg-secondary">{{ item.get_categoria_display }}</span></td>
+                      <td class="text-end">R$ {{ item.preco }}</td>
+                      <td>
+                        <input
+                          type="number"
+                          name="qty_{{ item.id }}"
+                          value="0"
+                          min="0"
+                          max="99"
+                          class="form-control form-control-sm qty-input"
+                          data-preco="{{ item.preco }}"
+                        >
+                      </td>
+                      <td class="text-end subtotal-cell">R$ 0,00</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+                <tfoot>
+                  <tr class="table-light fw-bold">
+                    <td colspan="4" class="text-end">Total Estimado:</td>
+                    <td class="text-end" id="total-geral">R$ 0,00</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">{{ form.observacoes.label }}</label>
+              {{ form.observacoes }}
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle"></i> Confirmar Pedido
+              </button>
+              <a href="{% url 'painel' %}" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function recalcular() {
+    let total = 0;
+    document.querySelectorAll('.qty-input').forEach(function(input) {
+      const row = input.closest('tr');
+      const preco = parseFloat(input.dataset.preco);
+      const qty = parseInt(input.value) || 0;
+      const sub = preco * qty;
+      total += sub;
+      row.querySelector('.subtotal-cell').textContent = 'R$ ' + sub.toFixed(2).replace('.', ',');
+    });
+    document.getElementById('total-geral').textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+  }
+
+  document.querySelectorAll('.qty-input').forEach(function(input) {
+    input.addEventListener('input', recalcular);
+  });
+</script>
+{% endblock %}

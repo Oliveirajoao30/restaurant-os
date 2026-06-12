@@ -1,0 +1,121 @@
+{% extends "orders/base.html" %}
+{% block title %}Pedido #{{ order.pk }} — RestaurantOS{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <!-- Detalhe do pedido -->
+  <div class="col-lg-7">
+    <div class="card shadow-sm">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-receipt"></i> <strong>Pedido #{{ order.pk }}</strong></span>
+        <span class="badge status-badge-{{ order.status }} text-white fs-6">
+          {{ order.get_status_display }}
+        </span>
+      </div>
+      <div class="card-body">
+        <p class="text-muted small">Criado em: {{ order.criado_em|date:"d/m/Y H:i" }}</p>
+
+        {% if order.observacoes %}
+          <div class="alert alert-secondary py-2">
+            <i class="bi bi-chat-text"></i> {{ order.observacoes }}
+          </div>
+        {% endif %}
+
+        <table class="table table-sm">
+          <thead class="table-light">
+            <tr>
+              <th>Item</th>
+              <th class="text-center">Qtd</th>
+              <th class="text-end">Unit.</th>
+              <th class="text-end">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in order.items.all %}
+              <tr>
+                <td>{{ item.nome_snapshot }}</td>
+                <td class="text-center">{{ item.quantidade }}</td>
+                <td class="text-end">R$ {{ item.preco_unit }}</td>
+                <td class="text-end">R$ {{ item.subtotal }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr class="fw-bold table-light">
+              <td colspan="3" class="text-end">Total:</td>
+              <td class="text-end text-success fs-5">R$ {{ order.total }}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        {% if order.pago %}
+          <div class="alert alert-success">
+            <i class="bi bi-check-circle-fill"></i>
+            Pago via {{ order.get_forma_pagamento_display }}
+          </div>
+        {% endif %}
+
+        <!-- Ações -->
+        <div class="d-flex gap-2 flex-wrap">
+          {% if order.proximo_status %}
+            <form method="post" action="{% url 'pedido_avancar' order.pk %}">
+              {% csrf_token %}
+              <button class="btn btn-warning">
+                <i class="bi bi-arrow-right-circle"></i>
+                Avançar Status
+              </button>
+            </form>
+          {% endif %}
+
+          {% if order.status == 'PRONTO' and not order.pago %}
+            <a href="{% url 'pedido_fechar' order.pk %}" class="btn btn-success">
+              <i class="bi bi-cash-coin"></i> Fechar e Pagar
+            </a>
+          {% endif %}
+
+          <a href="{% url 'painel' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar ao Painel
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Histórico de notificações (Observer) -->
+  <div class="col-lg-5">
+    <div class="card shadow-sm">
+      <div class="card-header">
+        <i class="bi bi-bell"></i> <strong>Histórico do Pedido</strong>
+        <small class="d-block text-muted">Padrão: Observer — Notificações</small>
+      </div>
+      <div class="card-body p-2" style="max-height: 400px; overflow-y: auto;">
+        {% if notificacoes %}
+          {% for n in notificacoes %}
+            <div class="d-flex gap-2 mb-2 align-items-start">
+              <div>
+                {% if n.tipo == 'COZINHA' %}
+                  <span class="badge bg-warning text-dark">Cozinha</span>
+                {% elif n.tipo == 'GARCOM' %}
+                  <span class="badge bg-info text-dark">Garçom</span>
+                {% else %}
+                  <span class="badge bg-secondary">Log</span>
+                {% endif %}
+              </div>
+              <div class="flex-grow-1">
+                <div class="small">{{ n.mensagem }}</div>
+                <div class="text-muted" style="font-size: 0.75rem;">
+                  {{ n.criado_em|date:"d/m H:i:s" }}
+                  · {{ n.status_de }} → {{ n.status_para }}
+                </div>
+              </div>
+            </div>
+            {% if not forloop.last %}<hr class="my-1">{% endif %}
+          {% endfor %}
+        {% else %}
+          <p class="text-muted small text-center mt-3">Nenhuma notificação ainda.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

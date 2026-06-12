@@ -1,0 +1,55 @@
+{% extends "orders/base.html" %}
+{% block title %}Notificações — RestaurantOS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2><i class="bi bi-bell-fill"></i> Log de Notificações</h2>
+  <span class="text-muted small">Padrão: Observer — KitchenNotifier, WaiterNotifier, OrderLogger</span>
+</div>
+
+{% if notificacoes %}
+  <div class="table-responsive">
+    <table class="table table-hover align-middle bg-white shadow-sm rounded">
+      <thead class="table-dark">
+        <tr>
+          <th>Data/Hora</th>
+          <th>Pedido</th>
+          <th>Tipo</th>
+          <th>Transição</th>
+          <th>Mensagem</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for n in notificacoes %}
+          <tr>
+            <td class="small text-muted text-nowrap">{{ n.criado_em|date:"d/m/Y H:i:s" }}</td>
+            <td>
+              <a href="{% url 'pedido_detalhe' n.order_id %}">#{{ n.order_id }}</a>
+            </td>
+            <td>
+              {% if n.tipo == 'COZINHA' %}
+                <span class="badge bg-warning text-dark"><i class="bi bi-fire"></i> Cozinha</span>
+              {% elif n.tipo == 'GARCOM' %}
+                <span class="badge bg-info text-dark"><i class="bi bi-person"></i> Garçom</span>
+              {% else %}
+                <span class="badge bg-secondary"><i class="bi bi-journal-text"></i> Log</span>
+              {% endif %}
+            </td>
+            <td class="small text-nowrap">
+              <span class="text-muted">{{ n.status_de }}</span>
+              <i class="bi bi-arrow-right"></i>
+              <span class="fw-bold">{{ n.status_para }}</span>
+            </td>
+            <td class="small">{{ n.mensagem }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> Nenhuma notificação registrada ainda.
+    Avance o status de um pedido para gerar notificações.
+  </div>
+{% endif %}
+{% endblock %}

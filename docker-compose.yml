@@ -1,0 +1,61 @@
+services:
+  db-cardapio:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: cardapio
+      POSTGRES_USER: cardapio
+      POSTGRES_PASSWORD: cardapio
+    volumes:
+      - db-cardapio-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cardapio"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  db-pedidos:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: pedidos
+      POSTGRES_USER: pedidos
+      POSTGRES_PASSWORD: pedidos
+    volumes:
+      - db-pedidos-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pedidos"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  cardapio-service:
+    build: ./cardapio-service
+    ports:
+      - "8001:8000"
+    environment:
+      DATABASE_URL: postgres://cardapio:cardapio@db-cardapio:5432/cardapio
+      SECRET_KEY: dev-secret-key-cardapio
+      DEBUG: "True"
+      ALLOWED_HOSTS: "*"
+    depends_on:
+      db-cardapio:
+        condition: service_healthy
+
+  pedidos-service:
+    build: ./pedidos-service
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgres://pedidos:pedidos@db-pedidos:5432/pedidos
+      SECRET_KEY: dev-secret-key-pedidos
+      DEBUG: "True"
+      ALLOWED_HOSTS: "*"
+      CARDAPIO_SERVICE_URL: http://cardapio-service:8000
+    depends_on:
+      db-pedidos:
+        condition: service_healthy
+      cardapio-service:
+        condition: service_started
+
+volumes:
+  db-cardapio-data:
+  db-pedidos-data:

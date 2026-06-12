@@ -1,0 +1,10 @@
+Django>=5.0,<6.0
+pytest>=8.0
+pytest-django>=4.8
+requests>=2.31
+responses>=0.25
+behave>=1.2
+dj-database-url>=2.1
+psycopg2-binary>=2.9
+gunicorn>=22.0
+whitenoise>=6.6

@@ -23,7 +23,7 @@ services:
     name: cardapio-service
     runtime: docker
     plan: free
-    repo: https://github.com/USERNAME/REPO
+    repo: https://github.com/Oliveirajoao30/restaurant-os
     rootDir: cardapio-service
     dockerfilePath: ./Dockerfile
     healthCheckPath: /api/v1/menu-items/
@@ -45,7 +45,7 @@ services:
     name: pedidos-service
     runtime: docker
     plan: free
-    repo: https://github.com/USERNAME/REPO
+    repo: https://github.com/Oliveirajoao30/restaurant-os
     rootDir: pedidos-service
     dockerfilePath: ./Dockerfile
     healthCheckPath: /

@@ -20,7 +20,7 @@ def get_notification_repository() -> NotificationRepository:
 
 
 def get_menu_catalog_port() -> MenuCatalogPort:
-    return CardapioServiceHttpAdapter(base_url=settings.CARDAPIO_SERVICE_URL)
+    return CardapioServiceHttpAdapter(base_url=settings.CARDAPIO_SERVICE_URL, timeout=60)
 
 
 def get_status_subject() -> OrderStatusSubject:

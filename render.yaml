@@ -1,12 +1,3 @@
-# Blueprint para deploy no Render (https://render.com/docs/blueprint-spec).
-#
-# Antes de usar:
-# 1. Substitua `repo:` pela URL do repositório Git (GitHub) dos dois serviços.
-# 2. Após o primeiro deploy do `cardapio-service`, confirme a URL pública gerada pelo
-#    Render (normalmente `https://cardapio-service.onrender.com`, mas pode receber um
-#    sufixo se o nome já estiver em uso) e ajuste `CARDAPIO_SERVICE_URL` abaixo se
-#    necessário.
-
 databases:
   - name: cardapio-db
     plan: free

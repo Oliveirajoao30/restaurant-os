@@ -63,4 +63,4 @@ services:
           name: pedidos-db
           property: connectionString
       - key: CARDAPIO_SERVICE_URL
-        value: "https://cardapio-service.onrender.com"
+        value: "https://cardapio-service-yo0i.onrender.com"

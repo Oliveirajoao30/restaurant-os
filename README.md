@@ -14,8 +14,8 @@ TDD (pytest) e BDD (behave), Docker/Docker Compose e deploy em nuvem (Render).
 
 | Serviço | URL pública |
 |---|---|
-| `cardapio-service` (catálogo) | _a preencher após o deploy no Render_ |
-| `pedidos-service` (pedidos/UI) | _a preencher após o deploy no Render_ |
+| `cardapio-service` (catálogo) | https://cardapio-service-yo0i.onrender.com |
+| `pedidos-service` (pedidos/UI) | https://pedidos-service-st78.onrender.com |
 
 Acesse o `pedidos-service` para usar a aplicação — ele consome o `cardapio-service`
 internamente via HTTP.
@@ -141,10 +141,8 @@ cd pedidos-service && behave     # 3 features, 6 cenários
   em produção — já configurado em `render.yaml` como `https://*.onrender.com`.
 - **Postgres free**: o banco Postgres gratuito do Render expira após 90 dias;
   se a avaliação ocorrer depois, recreie o banco e re-faça o deploy.
-- **`CARDAPIO_SERVICE_URL`**: em `render.yaml` está como
-  `https://cardapio-service.onrender.com`. Se o Render atribuir um sufixo
-  diferente ao nome do serviço, ajuste essa variável no dashboard do Render
-  (Settings → Environment) após o primeiro deploy.
+- **`CARDAPIO_SERVICE_URL`**: configurado em `render.yaml` como
+  `https://cardapio-service-yo0i.onrender.com` (URL atribuída pelo Render).
 
 ---
 

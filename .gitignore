@@ -19,6 +19,3 @@ venv/
 # Editor
 .vscode/
 .idea/
-
-# Claude Code local settings
-.claude/

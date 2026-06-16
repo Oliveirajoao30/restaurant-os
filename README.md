@@ -130,6 +130,24 @@ cd pedidos-service && behave     # 3 features, 6 cenários
 
 ---
 
+## Notas sobre o deploy no Render (free tier)
+
+- **Cold start**: serviços no plano free hibernam após inatividade; a primeira
+  requisição pode levar 30–60 s para responder.
+- **Timeout do Adapter**: o `CardapioServiceHttpAdapter` tem `timeout=10 s`.
+  Aumentar para 60 s (`CARDAPIO_SERVICE_URL` via env var) se o cold start do
+  `cardapio-service` for mais lento quando chamado pelo `pedidos-service`.
+- **CSRF_TRUSTED_ORIGINS**: necessário para formulários POST no `pedidos-service`
+  em produção — já configurado em `render.yaml` como `https://*.onrender.com`.
+- **Postgres free**: o banco Postgres gratuito do Render expira após 90 dias;
+  se a avaliação ocorrer depois, recreie o banco e re-faça o deploy.
+- **`CARDAPIO_SERVICE_URL`**: em `render.yaml` está como
+  `https://cardapio-service.onrender.com`. Se o Render atribuir um sufixo
+  diferente ao nome do serviço, ajuste essa variável no dashboard do Render
+  (Settings → Environment) após o primeiro deploy.
+
+---
+
 ## Estrutura do monorepo
 
 ```

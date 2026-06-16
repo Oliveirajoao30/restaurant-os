@@ -1,0 +1,5 @@
+# Normalize line endings: store LF in git, check out as-is on Linux/Mac,
+# and as CRLF on Windows (only for Windows-specific scripts).
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf

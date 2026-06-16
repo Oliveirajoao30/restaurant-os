@@ -1,3 +1,6 @@
+import uuid as _uuid
+from decimal import Decimal
+
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -117,6 +120,21 @@ def pedido_fechar(request, pk):
         if form.is_valid():
             forma = form.cleaned_data['forma']
             incluir_gorjeta = form.cleaned_data['incluir_gorjeta']
+
+            # PIX — passo 1: gerar chave e aguardar confirmação explícita do usuário
+            if forma == 'PIX' and not request.POST.get('pix_confirmado'):
+                chave_pix = str(_uuid.uuid4()).upper()[:20]
+                gorjeta = round(order.total * Decimal('0.10'), 2) if incluir_gorjeta else Decimal('0')
+                return render(request, 'orders/pedido_fechar.html', {
+                    'order': order,
+                    'form': form,
+                    'pix_pendente': True,
+                    'chave_pix': chave_pix,
+                    'incluir_gorjeta': incluir_gorjeta,
+                    'pix_gorjeta': gorjeta,
+                    'pix_total': order.total + gorjeta,
+                })
+
             kwargs = {'incluir_gorjeta': incluir_gorjeta}
             if forma == 'DINHEIRO':
                 kwargs['valor_recebido'] = form.cleaned_data['valor_recebido']

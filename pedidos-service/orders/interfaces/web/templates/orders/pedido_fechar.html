@@ -15,7 +15,6 @@
           <h5 class="card-title">Pedido #{{ order.pk }}</h5>
           <p><strong>Forma:</strong> {{ receipt.metodo }}</p>
 
-          <!-- Breakdown subtotal + gorjeta -->
           <table class="table table-sm mb-2">
             <tr>
               <td>Subtotal dos itens:</td>
@@ -61,14 +60,82 @@
         </div>
       </div>
 
-    {% elif receipt and receipt.status == 'recusado' %}
-      <div class="alert alert-danger">
-        <i class="bi bi-x-circle"></i> {{ receipt.mensagem }}
-      </div>
-    {% endif %}
+    {% elif pix_pendente %}
+      <!-- PIX gerado — aguarda confirmação do usuário -->
+      <div class="card border-warning shadow">
+        <div class="card-header bg-warning text-dark">
+          <i class="bi bi-qr-code"></i> <strong>PIX Gerado — Aguardando Confirmação</strong>
+          <small class="d-block opacity-75">Padrão: Strategy — PixPayment</small>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Pedido #{{ order.pk }}</h5>
 
-    {% if not receipt or receipt.status == 'recusado' %}
+          <table class="table table-sm mb-3">
+            <tr>
+              <td>Subtotal dos itens:</td>
+              <td class="text-end">R$ {{ order.total }}</td>
+            </tr>
+            {% if incluir_gorjeta %}
+              <tr class="text-muted">
+                <td>Serviço (10% garçom):</td>
+                <td class="text-end">R$ {{ pix_gorjeta }}</td>
+              </tr>
+            {% else %}
+              <tr class="text-muted fst-italic">
+                <td colspan="2">Serviço de 10% não incluído.</td>
+              </tr>
+            {% endif %}
+            <tr class="fw-bold table-light">
+              <td>Total a cobrar via PIX:</td>
+              <td class="text-end text-primary">R$ {{ pix_total }}</td>
+            </tr>
+          </table>
+
+          <div class="alert alert-info">
+            <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap">
+              <div>
+                <i class="bi bi-qr-code me-1"></i>
+                <strong>Chave PIX:</strong><br>
+                <code id="chave-pix-valor" class="fs-6 user-select-all">{{ chave_pix }}</code>
+              </div>
+              <button type="button" class="btn btn-outline-primary btn-sm" id="btn-copiar" onclick="copiarPix()">
+                <i class="bi bi-clipboard"></i> Copiar chave
+              </button>
+            </div>
+          </div>
+
+          <p class="text-muted small mb-3">
+            <i class="bi bi-info-circle"></i>
+            Copie a chave, realize o pagamento no seu aplicativo bancário e clique em
+            <strong>"PIX confirmado — pago"</strong> após receber a confirmação.
+          </p>
+
+          <div class="d-flex gap-2 flex-wrap">
+            <!-- Passo 2: confirmar pagamento recebido -->
+            <form method="post" class="d-inline">
+              {% csrf_token %}
+              <input type="hidden" name="forma" value="PIX">
+              <input type="hidden" name="pix_confirmado" value="1">
+              {% if incluir_gorjeta %}<input type="hidden" name="incluir_gorjeta" value="on">{% endif %}
+              <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle"></i> PIX confirmado — pago
+              </button>
+            </form>
+            <a href="{% url 'pedido_detalhe' order.pk %}" class="btn btn-outline-secondary">
+              <i class="bi bi-x-circle"></i> Não foi pago (cancelar)
+            </a>
+          </div>
+        </div>
+      </div>
+
+    {% else %}
       <!-- Formulário de pagamento -->
+      {% if receipt and receipt.status == 'recusado' %}
+        <div class="alert alert-danger mb-3">
+          <i class="bi bi-x-circle"></i> {{ receipt.mensagem }}
+        </div>
+      {% endif %}
+
       <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
           <i class="bi bi-cash-coin"></i> <strong>Fechar Pedido #{{ order.pk }}</strong>
@@ -76,7 +143,7 @@
         </div>
         <div class="card-body">
 
-          <!-- Subtotal + gorjeta estimada (pré-seleção) -->
+          <!-- Subtotal + gorjeta estimada -->
           <div class="card bg-light border mb-3">
             <div class="card-body py-2">
               <div class="d-flex justify-content-between">
@@ -95,7 +162,16 @@
             </div>
           </div>
 
-          <form method="post">
+          <!-- Erros de validação do servidor -->
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger py-2">
+              {% for error in form.non_field_errors %}
+                <div><i class="bi bi-exclamation-triangle"></i> {{ error }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <form method="post" novalidate>
             {% csrf_token %}
 
             <!-- Gorjeta -->
@@ -125,19 +201,30 @@
               {% endfor %}
             </div>
 
-            <!-- Campo dinheiro -->
+            <!-- Campo dinheiro (oculto por padrão, JS mostra ao selecionar DINHEIRO) -->
             <div id="campo-dinheiro" class="mb-3 d-none">
-              <label class="form-label">{{ form.valor_recebido.label }}</label>
+              <label class="form-label fw-bold" for="{{ form.valor_recebido.id_for_label }}">
+                {{ form.valor_recebido.label }}
+              </label>
               {{ form.valor_recebido }}
               {% if form.valor_recebido.errors %}
-                <div class="text-danger small">{{ form.valor_recebido.errors }}</div>
+                <div class="text-danger small mt-1">
+                  {% for error in form.valor_recebido.errors %}
+                    <div><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                  {% endfor %}
+                </div>
               {% endif %}
             </div>
 
-            <!-- Campo cartão -->
+            <!-- Campo cartão (oculto por padrão, JS mostra ao selecionar CARTAO) -->
             <div id="campo-cartao" class="mb-3 d-none">
-              <label class="form-label">{{ form.parcelas.label }}</label>
+              <label class="form-label fw-bold" for="{{ form.parcelas.id_for_label }}">
+                {{ form.parcelas.label }}
+              </label>
               {{ form.parcelas }}
+              <small class="text-muted d-block mt-1">
+                <i class="bi bi-info-circle"></i> Escolha o número de parcelas antes de confirmar.
+              </small>
             </div>
 
             <div class="d-flex gap-2">
@@ -167,12 +254,13 @@
   }
 
   function atualizar() {
-    const incluir = document.getElementById('{{ form.incluir_gorjeta.id_for_label }}').checked;
+    const incluir = document.getElementById('{{ form.incluir_gorjeta.id_for_label }}');
+    if (!incluir) return;
     const linhaGorjeta = document.getElementById('linha-gorjeta');
     const totalExibido = document.getElementById('total-exibido');
     const valorGorjeta = document.getElementById('valor-gorjeta');
 
-    if (incluir) {
+    if (incluir.checked) {
       const total = totalBase + gorjetaValor;
       valorGorjeta.textContent = fmt(gorjetaValor);
       totalExibido.textContent = fmt(total);
@@ -186,17 +274,72 @@
 
   function toggleCampos() {
     const forma = document.querySelector('input[name="forma"]:checked');
-    document.getElementById('campo-dinheiro').classList.add('d-none');
-    document.getElementById('campo-cartao').classList.add('d-none');
+    const campoDinheiro = document.getElementById('campo-dinheiro');
+    const campoCartao = document.getElementById('campo-cartao');
+    const inputValor = document.getElementById('{{ form.valor_recebido.id_for_label }}');
+    const selectParcelas = document.getElementById('{{ form.parcelas.id_for_label }}');
+
+    campoDinheiro.classList.add('d-none');
+    campoCartao.classList.add('d-none');
+    // Fix 1: remover required ao esconder campo dinheiro (evita bloqueio de submit)
+    inputValor.removeAttribute('required');
+
     if (!forma) return;
-    if (forma.value === 'DINHEIRO') document.getElementById('campo-dinheiro').classList.remove('d-none');
-    if (forma.value === 'CARTAO')   document.getElementById('campo-cartao').classList.remove('d-none');
+
+    if (forma.value === 'DINHEIRO') {
+      campoDinheiro.classList.remove('d-none');
+      // Fix 1: adicionar required no browser ao selecionar DINHEIRO
+      inputValor.setAttribute('required', 'required');
+      inputValor.focus();
+    } else if (forma.value === 'CARTAO') {
+      campoCartao.classList.remove('d-none');
+      // Fix 2: focar no select de parcelas para o usuário perceber que precisa escolher
+      selectParcelas.focus();
+    }
   }
 
-  document.getElementById('{{ form.incluir_gorjeta.id_for_label }}').addEventListener('change', atualizar);
-  document.querySelectorAll('input[name="forma"]').forEach(r => r.addEventListener('change', toggleCampos));
+  const gorjetaCheckbox = document.getElementById('{{ form.incluir_gorjeta.id_for_label }}');
+  if (gorjetaCheckbox) {
+    gorjetaCheckbox.addEventListener('change', atualizar);
+    atualizar();
+  }
 
-  atualizar();
+  document.querySelectorAll('input[name="forma"]').forEach(r => r.addEventListener('change', toggleCampos));
   toggleCampos();
+
+  // Fix 3: copiar chave PIX para área de transferência
+  function copiarPix() {
+    const chave = document.getElementById('chave-pix-valor').textContent.trim();
+    const btn = document.getElementById('btn-copiar');
+
+    const done = () => {
+      btn.innerHTML = '<i class="bi bi-clipboard-check"></i> Copiado!';
+      btn.classList.remove('btn-outline-primary');
+      btn.classList.add('btn-success');
+      setTimeout(() => {
+        btn.innerHTML = '<i class="bi bi-clipboard"></i> Copiar chave';
+        btn.classList.remove('btn-success');
+        btn.classList.add('btn-outline-primary');
+      }, 2000);
+    };
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(chave).then(done).catch(() => copiarFallback(chave, done));
+    } else {
+      copiarFallback(chave, done);
+    }
+  }
+
+  function copiarFallback(texto, callback) {
+    const el = document.createElement('textarea');
+    el.value = texto;
+    el.style.position = 'fixed';
+    el.style.opacity = '0';
+    document.body.appendChild(el);
+    el.focus();
+    el.select();
+    try { document.execCommand('copy'); callback(); } catch (_) {}
+    document.body.removeChild(el);
+  }
 </script>
 {% endblock %}

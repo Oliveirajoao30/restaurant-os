@@ -85,12 +85,31 @@ def test_pedido_avancar_status_gera_notificacoes(client):
 
 
 @pytest.mark.django_db
-def test_pedido_fechar_pagamento_pix(client):
+def test_pedido_fechar_pagamento_pix_pendente(client):
+    """Passo 1: POST sem pix_confirmado gera chave e não marca como pago."""
     order = Order.objects.create(status='ENTREGUE', total=Decimal('100.00'))
 
     response = client.post(f'/pedidos/{order.pk}/fechar/', {
         'forma': 'PIX',
         'incluir_gorjeta': 'on',
+    })
+
+    assert response.status_code == 200
+    assert response.context['pix_pendente'] is True
+    assert 'chave_pix' in response.context
+    order.refresh_from_db()
+    assert order.pago is False
+
+
+@pytest.mark.django_db
+def test_pedido_fechar_pagamento_pix(client):
+    """Passo 2: POST com pix_confirmado=1 marca o pedido como pago."""
+    order = Order.objects.create(status='ENTREGUE', total=Decimal('100.00'))
+
+    response = client.post(f'/pedidos/{order.pk}/fechar/', {
+        'forma': 'PIX',
+        'incluir_gorjeta': 'on',
+        'pix_confirmado': '1',
     })
 
     assert response.status_code == 200

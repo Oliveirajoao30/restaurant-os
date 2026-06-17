@@ -209,8 +209,8 @@
               {% endfor %}
             </div>
 
-            <!-- Campo dinheiro (oculto por padrão, JS mostra ao selecionar DINHEIRO) -->
-            <div id="campo-dinheiro" class="mb-3" style="display:none">
+            <!-- Campo dinheiro (JS mostra ao selecionar DINHEIRO; server-side ao re-renderizar com erro) -->
+            <div id="campo-dinheiro" class="mb-3" style="display:{% if mostrar_dinheiro %}block{% else %}none{% endif %}">
               <label class="form-label fw-bold" for="{{ form.valor_recebido.id_for_label }}">
                 {{ form.valor_recebido.label }}
               </label>
@@ -224,8 +224,8 @@
               {% endif %}
             </div>
 
-            <!-- Campo cartão (oculto por padrão, JS mostra ao selecionar CARTAO) -->
-            <div id="campo-cartao" class="mb-3" style="display:none">
+            <!-- Campo cartão (JS mostra ao selecionar CARTAO; server-side ao re-renderizar com erro) -->
+            <div id="campo-cartao" class="mb-3" style="display:{% if mostrar_cartao %}block{% else %}none{% endif %}">
               <label class="form-label fw-bold" for="{{ form.parcelas.id_for_label }}">
                 {{ form.parcelas.label }}
               </label>

@@ -24,7 +24,7 @@ class PagamentoForm(forms.Form):
     forma = forms.ChoiceField(
         choices=FORMA_CHOICES,
         label='Forma de Pagamento',
-        widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
+        widget=forms.RadioSelect(attrs={'class': 'form-check-input', 'onchange': 'toggleCampos()'}),
         initial='PIX',
     )
     valor_recebido = forms.DecimalField(

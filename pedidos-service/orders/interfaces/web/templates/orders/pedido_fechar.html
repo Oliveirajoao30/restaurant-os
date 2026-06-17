@@ -91,17 +91,19 @@
             </tr>
           </table>
 
-          <div class="alert alert-info">
-            <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap">
-              <div>
-                <i class="bi bi-qr-code me-1"></i>
-                <strong>Chave PIX:</strong><br>
-                <code id="chave-pix-valor" class="fs-6 user-select-all">{{ chave_pix }}</code>
-              </div>
-              <button type="button" class="btn btn-outline-primary btn-sm" id="btn-copiar" onclick="copiarPix()">
-                <i class="bi bi-clipboard"></i> Copiar chave
+          <div class="mb-3">
+            <label class="form-label fw-bold"><i class="bi bi-qr-code me-1"></i> Chave PIX:</label>
+            <div class="input-group">
+              <input type="text" readonly class="form-control font-monospace"
+                     id="chave-pix-valor" value="{{ chave_pix }}"
+                     onclick="this.select()" title="Clique para selecionar tudo">
+              <button type="button" class="btn btn-outline-primary" id="btn-copiar" onclick="copiarPix()">
+                <i class="bi bi-clipboard"></i> Copiar
               </button>
             </div>
+            <small class="text-muted d-block mt-1">
+              Clique no campo ou no botão "Copiar" — depois cole com <kbd>Ctrl+V</kbd>.
+            </small>
           </div>
 
           <p class="text-muted small mb-3">
@@ -202,7 +204,7 @@
             </div>
 
             <!-- Campo dinheiro (oculto por padrão, JS mostra ao selecionar DINHEIRO) -->
-            <div id="campo-dinheiro" class="mb-3 d-none">
+            <div id="campo-dinheiro" class="mb-3" style="display:none">
               <label class="form-label fw-bold" for="{{ form.valor_recebido.id_for_label }}">
                 {{ form.valor_recebido.label }}
               </label>
@@ -217,7 +219,7 @@
             </div>
 
             <!-- Campo cartão (oculto por padrão, JS mostra ao selecionar CARTAO) -->
-            <div id="campo-cartao" class="mb-3 d-none">
+            <div id="campo-cartao" class="mb-3" style="display:none">
               <label class="form-label fw-bold" for="{{ form.parcelas.id_for_label }}">
                 {{ form.parcelas.label }}
               </label>
@@ -273,28 +275,31 @@
   }
 
   function toggleCampos() {
-    const forma = document.querySelector('input[name="forma"]:checked');
-    const campoDinheiro = document.getElementById('campo-dinheiro');
-    const campoCartao = document.getElementById('campo-cartao');
-    const inputValor = document.getElementById('{{ form.valor_recebido.id_for_label }}');
-    const selectParcelas = document.getElementById('{{ form.parcelas.id_for_label }}');
+    const campoDinheiro  = document.getElementById('campo-dinheiro');
+    const campoCartao    = document.getElementById('campo-cartao');
+    // guard: elementos só existem na página de formulário; sair sem erro nas demais
+    if (!campoDinheiro || !campoCartao) return;
 
-    campoDinheiro.classList.add('d-none');
-    campoCartao.classList.add('d-none');
-    // Fix 1: remover required ao esconder campo dinheiro (evita bloqueio de submit)
-    inputValor.removeAttribute('required');
+    const forma          = document.querySelector('input[name="forma"]:checked');
+    const inputValor     = document.getElementById('id_valor_recebido');
+    const selectParcelas = document.getElementById('id_parcelas');
+
+    // usar style.display para garantir precedência sobre qualquer classe CSS
+    campoDinheiro.style.display = 'none';
+    campoCartao.style.display   = 'none';
+    if (inputValor) inputValor.removeAttribute('required');
 
     if (!forma) return;
 
     if (forma.value === 'DINHEIRO') {
-      campoDinheiro.classList.remove('d-none');
-      // Fix 1: adicionar required no browser ao selecionar DINHEIRO
-      inputValor.setAttribute('required', 'required');
-      inputValor.focus();
+      campoDinheiro.style.display = 'block';
+      if (inputValor) {
+        inputValor.setAttribute('required', 'required');
+        inputValor.focus();
+      }
     } else if (forma.value === 'CARTAO') {
-      campoCartao.classList.remove('d-none');
-      // Fix 2: focar no select de parcelas para o usuário perceber que precisa escolher
-      selectParcelas.focus();
+      campoCartao.style.display = 'block';
+      if (selectParcelas) selectParcelas.focus();
     }
   }
 
@@ -309,7 +314,7 @@
 
   // Fix 3: copiar chave PIX para área de transferência
   function copiarPix() {
-    const chave = document.getElementById('chave-pix-valor').textContent.trim();
+    const chave = document.getElementById('chave-pix-valor').value;
     const btn = document.getElementById('btn-copiar');
 
     const done = () => {

@@ -165,10 +165,16 @@
           </div>
 
           <!-- Erros de validação do servidor -->
-          {% if form.non_field_errors %}
+          {% if form.errors %}
             <div class="alert alert-danger py-2">
+              <strong><i class="bi bi-exclamation-triangle"></i> Corrija os campos abaixo:</strong>
+              {% for field in form %}
+                {% for error in field.errors %}
+                  <div class="mt-1">{{ field.label }}: {{ error }}</div>
+                {% endfor %}
+              {% endfor %}
               {% for error in form.non_field_errors %}
-                <div><i class="bi bi-exclamation-triangle"></i> {{ error }}</div>
+                <div class="mt-1"><i class="bi bi-exclamation-triangle"></i> {{ error }}</div>
               {% endfor %}
             </div>
           {% endif %}

@@ -19,7 +19,7 @@ class PagamentoForm(forms.Form):
         ('CARTAO', 'Cartão de Crédito'),
         ('PIX', 'PIX'),
     ]
-    PARCELAS_CHOICES = [(i, f'{i}x') for i in range(1, 13)]
+    PARCELAS_CHOICES = [('', '— Selecione as parcelas —')] + [(i, f'{i}x') for i in range(1, 13)]
 
     forma = forms.ChoiceField(
         choices=FORMA_CHOICES,
@@ -39,7 +39,6 @@ class PagamentoForm(forms.Form):
         required=False,
         label='Número de Parcelas',
         widget=forms.Select(attrs={'class': 'form-select'}),
-        initial=1,
     )
 
     incluir_gorjeta = forms.BooleanField(
@@ -54,4 +53,6 @@ class PagamentoForm(forms.Form):
         forma = cleaned.get('forma')
         if forma == 'DINHEIRO' and not cleaned.get('valor_recebido'):
             self.add_error('valor_recebido', 'Informe o valor recebido para pagamento em dinheiro.')
+        if forma == 'CARTAO' and not cleaned.get('parcelas'):
+            self.add_error('parcelas', 'Selecione o número de parcelas.')
         return cleaned

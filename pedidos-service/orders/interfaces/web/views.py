@@ -114,8 +114,6 @@ def pedido_fechar(request, pk):
     """Seleciona a forma de pagamento e executa o Strategy Pattern."""
     order = get_object_or_404(Order, pk=pk)
     receipt = None
-    mostrar_dinheiro = False
-    mostrar_cartao = False
 
     if request.method == 'POST':
         form = PagamentoForm(request.POST)
@@ -137,25 +135,12 @@ def pedido_fechar(request, pk):
                     'pix_total': order.total + gorjeta,
                 })
 
-            kwargs = {'incluir_gorjeta': incluir_gorjeta}
-            if forma == 'DINHEIRO':
-                kwargs['valor_recebido'] = form.cleaned_data['valor_recebido']
-            elif forma == 'CARTAO':
-                kwargs['parcelas'] = form.cleaned_data['parcelas']
-
             receipt = ProcessarPagamentoUseCase(container.get_order_repository()).execute(
-                order_id=pk, forma=forma, **kwargs
+                order_id=pk, forma=forma, incluir_gorjeta=incluir_gorjeta,
             )
             if receipt['status'] == 'aprovado':
                 order.refresh_from_db()
                 messages.success(request, receipt['mensagem'])
-            else:
-                mostrar_dinheiro = (forma == 'DINHEIRO')
-                mostrar_cartao = (forma == 'CARTAO')
-        else:
-            forma_submetida = request.POST.get('forma', '')
-            mostrar_dinheiro = (forma_submetida == 'DINHEIRO')
-            mostrar_cartao = (forma_submetida == 'CARTAO')
     else:
         form = PagamentoForm()
 
@@ -163,8 +148,6 @@ def pedido_fechar(request, pk):
         'order': order,
         'form': form,
         'receipt': receipt,
-        'mostrar_dinheiro': mostrar_dinheiro,
-        'mostrar_cartao': mostrar_cartao,
     })
 
 

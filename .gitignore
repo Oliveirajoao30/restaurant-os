@@ -22,3 +22,6 @@ venv/
 
 # Local editor settings
 .claude/
+
+# Terminal Paste Image folder
+.cp-images/

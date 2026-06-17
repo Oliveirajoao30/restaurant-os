@@ -78,6 +78,9 @@ class ProcessarPagamentoUseCase:
             gorjeta_valor = (order.total * GORJETA_PERCENTUAL).quantize(Decimal('0.01'))
             valor_total = order.total + gorjeta_valor
 
+        if forma == 'DINHEIRO' and 'valor_recebido' not in kwargs:
+            kwargs['valor_recebido'] = valor_total
+
         strategy = build_strategy(forma, **kwargs)
         context = PaymentContext(strategy)
         receipt = context.execute(order, valor_total)

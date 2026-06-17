@@ -36,11 +36,6 @@
             </tr>
           </table>
 
-          {% if receipt.troco is not None %}
-            <p><strong>Valor Recebido:</strong> R$ {{ receipt.valor_recebido }}</p>
-            <p class="text-success fw-bold"><strong>Troco:</strong> R$ {{ receipt.troco }}</p>
-          {% endif %}
-
           {% if receipt.parcelas %}
             <p><strong>Parcelas:</strong> {{ receipt.parcelas }}x de R$ {{ receipt.valor_por_parcela }}</p>
           {% endif %}
@@ -132,12 +127,6 @@
 
     {% else %}
       <!-- Formulário de pagamento -->
-      {% if receipt and receipt.status == 'recusado' %}
-        <div class="alert alert-danger mb-3">
-          <i class="bi bi-x-circle"></i> {{ receipt.mensagem }}
-        </div>
-      {% endif %}
-
       <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
           <i class="bi bi-cash-coin"></i> <strong>Fechar Pedido #{{ order.pk }}</strong>
@@ -164,22 +153,7 @@
             </div>
           </div>
 
-          <!-- Erros de validação do servidor -->
-          {% if form.errors %}
-            <div class="alert alert-danger py-2">
-              <strong><i class="bi bi-exclamation-triangle"></i> Corrija os campos abaixo:</strong>
-              {% for field in form %}
-                {% for error in field.errors %}
-                  <div class="mt-1">{{ field.label }}: {{ error }}</div>
-                {% endfor %}
-              {% endfor %}
-              {% for error in form.non_field_errors %}
-                <div class="mt-1"><i class="bi bi-exclamation-triangle"></i> {{ error }}</div>
-              {% endfor %}
-            </div>
-          {% endif %}
-
-          <form method="post" novalidate>
+          <form method="post">
             {% csrf_token %}
 
             <!-- Gorjeta -->
@@ -207,32 +181,6 @@
                   </label>
                 </div>
               {% endfor %}
-            </div>
-
-            <!-- Campo dinheiro (JS mostra ao selecionar DINHEIRO; server-side ao re-renderizar com erro) -->
-            <div id="campo-dinheiro" class="mb-3" style="display:{% if mostrar_dinheiro %}block{% else %}none{% endif %}">
-              <label class="form-label fw-bold" for="{{ form.valor_recebido.id_for_label }}">
-                {{ form.valor_recebido.label }}
-              </label>
-              {{ form.valor_recebido }}
-              {% if form.valor_recebido.errors %}
-                <div class="text-danger small mt-1">
-                  {% for error in form.valor_recebido.errors %}
-                    <div><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
-                  {% endfor %}
-                </div>
-              {% endif %}
-            </div>
-
-            <!-- Campo cartão (JS mostra ao selecionar CARTAO; server-side ao re-renderizar com erro) -->
-            <div id="campo-cartao" class="mb-3" style="display:{% if mostrar_cartao %}block{% else %}none{% endif %}">
-              <label class="form-label fw-bold" for="{{ form.parcelas.id_for_label }}">
-                {{ form.parcelas.label }}
-              </label>
-              {{ form.parcelas }}
-              <small class="text-muted d-block mt-1">
-                <i class="bi bi-info-circle"></i> Escolha o número de parcelas antes de confirmar.
-              </small>
             </div>
 
             <div class="d-flex gap-2">
@@ -269,43 +217,13 @@
     const valorGorjeta = document.getElementById('valor-gorjeta');
 
     if (incluir.checked) {
-      const total = totalBase + gorjetaValor;
       valorGorjeta.textContent = fmt(gorjetaValor);
-      totalExibido.textContent = fmt(total);
+      totalExibido.textContent = fmt(totalBase + gorjetaValor);
       linhaGorjeta.classList.remove('text-decoration-line-through', 'opacity-50');
     } else {
       valorGorjeta.textContent = fmt(gorjetaValor);
       totalExibido.textContent = fmt(totalBase);
       linhaGorjeta.classList.add('text-decoration-line-through', 'opacity-50');
-    }
-  }
-
-  function toggleCampos() {
-    const campoDinheiro  = document.getElementById('campo-dinheiro');
-    const campoCartao    = document.getElementById('campo-cartao');
-    // guard: elementos só existem na página de formulário; sair sem erro nas demais
-    if (!campoDinheiro || !campoCartao) return;
-
-    const forma          = document.querySelector('input[name="forma"]:checked');
-    const inputValor     = document.getElementById('id_valor_recebido');
-    const selectParcelas = document.getElementById('id_parcelas');
-
-    // usar style.display para garantir precedência sobre qualquer classe CSS
-    campoDinheiro.style.display = 'none';
-    campoCartao.style.display   = 'none';
-    if (inputValor) inputValor.removeAttribute('required');
-
-    if (!forma) return;
-
-    if (forma.value === 'DINHEIRO') {
-      campoDinheiro.style.display = 'block';
-      if (inputValor) {
-        inputValor.setAttribute('required', 'required');
-        inputValor.focus();
-      }
-    } else if (forma.value === 'CARTAO') {
-      campoCartao.style.display = 'block';
-      if (selectParcelas) selectParcelas.focus();
     }
   }
 
@@ -315,10 +233,6 @@
     atualizar();
   }
 
-  document.querySelectorAll('input[name="forma"]').forEach(r => r.addEventListener('change', toggleCampos));
-  toggleCampos();
-
-  // Fix 3: copiar chave PIX para área de transferência
   function copiarPix() {
     const chave = document.getElementById('chave-pix-valor').value;
     const btn = document.getElementById('btn-copiar');

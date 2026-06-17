@@ -19,9 +19,3 @@ venv/
 # Editor
 .vscode/
 .idea/
-
-# Local editor settings
-.claude/
-
-# Terminal Paste Image folder
-.cp-images/
